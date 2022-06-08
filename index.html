@@ -1,0 +1,92 @@
+<html>
+<head>
+<title>Lab 1 Assignment</title>
+<style>
+    body {
+        text-align: center;
+    }
+    table {
+        width: 50%;
+        border: 1px solid black;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    th {
+        font-weight: bold;
+        text-align: center;
+        background-color: #f1f1f1;
+        border: 1px solid black;
+    }
+
+    td {
+        text-align: center;
+        border: 1px solid black;
+    }
+
+</style>
+</head>
+<body>
+
+<h1>Environment PSI Table</h1>
+<p id="ts"></p>
+<table>
+    <thead>    
+        <tr>
+            <th>Metric</th>
+            <th>National</th>
+            <th>Central</th>
+            <th>West</th>
+            <th>East</th>
+            <th>North</th>
+            <th>South</th>
+        </tr>
+    </thead>
+    <tbody id="tb"></tbody>
+</table>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+fetch('https://api.data.gov.sg/v1/environment/psi')
+  .then(response => response.json())
+  .then(data => {
+
+    var info = data.items[0].readings;
+    var c = "";
+
+    for (let r in info) {
+        metric = r;
+        national = info[r]["national"];
+        central = info[r]["central"];
+        west = info[r]["west"];
+        east = info[r]["east"];
+        north = info[r]["north"];
+        south = info[r]["south"];
+
+        c += "<tr>";
+        c += "<td>" + metric + "</td>";
+        c += "<td>" + national + "</td>";
+        c += "<td>" + central + "</td>";
+        c += "<td>" + west + "</td>";
+        c += "<td>" + east + "</td>";
+        c += "<td>" + north + "</td>";
+        c += "<td>" + south + "</td>";
+        c += "</tr>";
+    }
+    document.getElementById("tb").innerHTML = c;
+
+    var ts = data.items[0].update_timestamp;
+    ts = new Date(ts).toLocaleString(undefined, {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+    
+    document.getElementById("ts").innerHTML = ("Last updated " + ts);
+     
+});
+
+</script>
+</body>
+</html>
